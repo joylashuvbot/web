@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000000">
+    <meta name="telegram-web-app" content="yes">
+    <title>My Food Map - Admin Panel</title>
+
+    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-layout {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: 380px;
+            min-width: 380px;
+            background: #f5f5f7;
+            border-right: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .admin-header {
+            padding: 16px 20px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .admin-header h1 {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .admin-badge {
+            background: #34C759;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            background: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            padding: 0 16px;
+        }
+
+        .admin-tab {
+            flex: 1;
+            padding: 14px 8px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: #8E8E93;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .admin-tab.active { color: #000; }
+
+        .admin-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: #000;
+            border-radius: 2px;
+        }
+
+        .admin-tab .count {
+            background: rgba(0,0,0,0.06);
+            padding: 2px 6px;
+            border-radius: 999px;
+            font-size: 11px;
+            margin-left: 4px;
+        }
+
+        /* Stats bar */
+        .admin-stats {
+            display: flex;
+            padding: 12px 16px;
+            gap: 8px;
+            background: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .stat-item {
+            flex: 1;
+            background: #f5f5f7;
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #8E8E93;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Search */
+        .admin-search {
+            padding: 12px 16px;
+            background: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .admin-search input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            background: #f5f5f7;
+            box-sizing: border-box;
+        }
+
+        .admin-search input:focus {
+            background: #fff;
+            border-color: #007AFF;
+        }
+
+        /* Places list */
+        .places-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .place-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #fff;
+            margin: 0 12px 8px;
+            border-radius: 14px;
+            border: 1px solid rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .place-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .place-item.active {
+            border-color: #007AFF;
+            background: rgba(0,122,255,0.04);
+        }
+
+        .place-marker-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .place-marker-icon.food {
+            background: #34C759;
+            color: #fff;
+        }
+
+        .place-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .place-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .place-address {
+            font-size: 12px;
+            color: #8E8E93;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .place-meta {
+            margin-top: 3px;
+        }
+
+        .place-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .place-actions button {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: rgba(0,122,255,0.1);
+            color: #007AFF;
+        }
+
+        .btn-delete {
+            background: rgba(255,59,48,0.1);
+            color: #FF3B30;
+        }
+
+        .btn-edit:hover { background: #007AFF; color: #fff; }
+        .btn-delete:hover { background: #FF3B30; color: #fff; }
+
+        /* Bottom actions */
+        .admin-actions {
+            padding: 12px 16px;
+            background: #fff;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            gap: 8px;
+        }
+
+        .admin-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-add { background: #000; color: #fff; }
+        .btn-geocode { background: #f5f5f7; color: #000; border: 1px solid rgba(0,0,0,0.08); }
+        .btn-add:hover { background: #333; }
+        .btn-geocode:hover { background: #e5e5e5; }
+
+        /* Map area */
+        .admin-map-area {
+            flex: 1;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Legend */
+        .map-legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 16px;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            z-index: 500;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .legend-dot.food { background: #34C759; }
+
+        /* Leaflet Zoom & Attribution Fix */
+        .leaflet-control-attribution { display: none !important; }
+        .leaflet-control-zoom { border: none !important; background: transparent !important; border-radius: 10px !important; overflow: hidden !important; box-shadow: none !important; }
+        .leaflet-control-zoom a { width: 32px !important; height: 32px !important; line-height: 32px !important; font-size: 18px !important; font-weight: 300 !important; color: #000 !important; background: #fff !important; border: none !important; text-decoration: none !important; transition: background 0.2s !important; }
+        .leaflet-control-zoom a:hover { background: #f2f2f7 !important; }
+        .leaflet-control-zoom a:active { background: #e5e5ea !important; }
+        .leaflet-control-zoom-in { border-bottom: 1px solid rgba(0,0,0,0.08) !important; }
+
+        /* Modal */
+        .admin-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .admin-modal.active { display: flex; }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 540px;
+            max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-body { padding: 20px 24px; }
+
+        .form-group { margin-bottom: 16px; }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            background: #f5f5f7;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            background: #fff;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+        }
+
+        .form-group textarea {
+            min-height: 110px;
+            resize: vertical;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group { flex: 1; }
+
+        /* Manzil link + coords row */
+        .address-link-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .address-link-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .btn-extract {
+            height: 46px;
+            padding: 0 14px;
+            background: #34C759;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-extract:hover { background: #2eb350; }
+        .btn-extract:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Coords readonly hint */
+        .coords-hint {
+            font-size: 11px;
+            color: #8E8E93;
+            margin-top: 4px;
+        }
+
+        /* Section divider */
+        .form-section {
+            font-size: 11px;
+            font-weight: 700;
+            color: #8E8E93;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 20px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .modal-footer {
+            padding: 16px 24px 24px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .modal-footer button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel { background: #f5f5f7; color: #000; }
+        .btn-save { background: #000; color: #fff; }
+        .btn-save:hover { background: #333; }
+
+        /* Toast */
+        .admin-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 2000;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 300px;
+        }
+
+        .admin-toast.show { transform: translateX(0); }
+
+        /* Warning */
+        .sidebar-warning {
+            margin: 0 12px 12px;
+            padding: 12px;
+            background: #FFF3CD;
+            border: 1px solid #FFE082;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #856404;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-warning button {
+            background: #856404;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Map Place Actions */
+        .map-place-actions {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            padding: 14px 16px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            z-index: 500;
+            min-width: 220px;
+            max-width: 280px;
+            animation: fadeUp 0.3s var(--spring);
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        .map-place-actions.hidden { display: none !important; }
+        .mpa-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .mpa-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+        .mpa-close {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 999px;
+            background: rgba(0,0,0,0.06);
+            color: #000;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .mpa-close:hover { background: rgba(0,0,0,0.1); }
+        .mpa-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .mpa-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mpa-edit {
+            background: rgba(0,122,255,0.1);
+            color: #007AFF;
+        }
+        .mpa-edit:hover {
+            background: #007AFF;
+            color: #fff;
+        }
+        .mpa-delete {
+            background: rgba(255,59,48,0.1);
+            color: #FF3B30;
+        }
+        .mpa-delete:hover {
+            background: #FF3B30;
+            color: #fff;
+        }
+        .mpa-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ===== MAP PICKER BUTTON ===== */
+        .btn-map-picker {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #007AFF, #0051D5);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-map-picker:hover {
+            background: linear-gradient(135deg, #0051D5, #003D9E);
+            transform: translateY(-1px);
+        }
+        .btn-map-picker:active {
+            transform: scale(0.97);
+        }
+        .btn-map-picker.active {
+            background: #34C759;
+        }
+
+        /* ===== COORDS DISPLAY ROW ===== */
+        .coords-display-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .coords-display-row .form-group {
+            flex: 1;
+        }
+        .coords-status {
+            font-size: 11px;
+            color: #34C759;
+            font-weight: 600;
+            margin-top: 4px;
+            display: none;
+        }
+        .coords-status.visible {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                position: fixed;
+                left: 0; top: 0; bottom: 0;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                z-index: 1000;
+            }
+
+            .admin-sidebar.open { transform: translateX(0); }
+
+            .sidebar-toggle {
+                position: fixed;
+                top: 12px; left: 12px;
+                z-index: 500;
+                width: 44px; height: 44px;
+                background: #fff;
+                border: none;
+                border-radius: 12px;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .sidebar-toggle { display: none; }
+        }
+    </style>
+    <base target="_blank">
+<base target="_blank">
+</head>
+<body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="sidebar">
+            <div class="admin-header">
+                <h1>🗺 Admin Panel</h1>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+
+            <!-- Tabs -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="all" onclick="switchTab('all')" style="width:100%;">
+                    Hammasi <span class="count" id="count-all">0</span>
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="admin-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">Jami</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-with-coords">0</div>
+                    <div class="stat-label">Koordinatali</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-no-coords">0</div>
+                    <div class="stat-label">Koordinatasiz</div>
+                </div>
+            </div>
+
+            <!-- Warning -->
+            <div id="sidebar-warning" class="sidebar-warning hidden">
+                <span>⚠️ Koordinatasiz joylar bor!</span>
+                <button onclick="geocodeAllPlaces()">Topish</button>
+            </div>
+
+            <!-- Search -->
+            <div class="admin-search">
+                <input type="text" id="search-places" placeholder="Qidirish...">
+            </div>
+
+            <!-- Places List -->
+            <div class="places-list" id="places-list"></div>
+
+            <!-- Actions -->
+            <div class="admin-actions">
+                <button class="btn-add" onclick="openAddModal()">+ Joy qo'shish</button>
+                <button class="btn-geocode" onclick="geocodeAllPlaces()">📍 Koordinatalar</button>
+            </div>
+        </div>
+
+        <!-- Map Area -->
+        <div class="admin-map-area">
+            <div id="map"></div>
+            <div id="map-place-actions" class="map-place-actions hidden">
+                <div class="mpa-header">
+                    <div id="mpa-name" class="mpa-name">Joy tanlang</div>
+                    <button class="mpa-close" onclick="hideMapPlaceActions()" aria-label="Yopish">✕</button>
+                </div>
+                <div class="mpa-buttons">
+                    <button class="mpa-btn mpa-edit" onclick="editSelectedPlace()">Tahrirlash</button>
+                    <button class="mpa-btn mpa-delete" onclick="deleteSelectedPlace()">O'chirish</button>
+                </div>
+            </div>
+            <div class="map-legend">
+                <div class="legend-item">
+                    <div class="legend-dot food"></div>
+                    <span>Restoran</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="admin-modal" id="place-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="modal-title">Yangi joy qo'shish</h2>
+                <button onclick="closeModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#8E8E93;">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="place-id">
+
+                <!-- Asosiy ma'lumotlar -->
+                <div class="form-section">Asosiy ma'lumotlar</div>
+
+                <div class="form-group">
+                    <label>Nomi *</label>
+                    <input type="text" id="place-name" placeholder="Restoran nomi">
+                </div>
+
+                <!-- Manzil -->
+                <div class="form-section">Manzil</div>
+
+                <div class="form-group">
+                    <label>Manzil nomi</label>
+                    <input type="text" id="place-address-name" placeholder="Masalan: Mt.Prospect, IL">
+                </div>
+
+                <div class="form-group">
+                    <label>Google Maps link</label>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <input type="url" id="place-address-link" placeholder="https://maps.app.goo.gl/..." style="flex:1;">
+                        <button class="btn-extract" id="btn-extract-coords" onclick="extractCoordsFromLink(false)" title="Linkdan koordinat olish" style="flex-shrink:0;">🔍</button>
+                    </div>
+                    <div id="coords-status-msg" class="coords-hint" style="margin-top:6px;display:none;"></div>
+                    <div class="coords-hint" style="margin-top:4px;">Link kirgizilganda koordinatalar avtomatik aniqlanadi. Agar topilmasa 🔍 ni bosing.</div>
+                </div>
+
+                <!-- Koordinatlar -->
+                <div class="form-section">Koordinatalar</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Kenglik (Lat)</label>
+                        <input type="number" step="any" id="place-lat" placeholder="42.0451">
+                    </div>
+                    <div class="form-group">
+                        <label>Uzunlik (Lng)</label>
+                        <input type="number" step="any" id="place-lng" placeholder="-87.9073">
+                    </div>
+                </div>
+
+                <!-- XARITADAN TANLASH BUTTON -->
+                <button class="btn-map-picker" id="btn-map-picker" onclick="toggleMapPicker()">
+                    🗺 Xaritadan tanlash
+                </button>
+                <div class="coords-hint" style="text-align:center;margin-top:4px;">
+                    Yoki xaritada istalgan joyni bosing — koordinatalar avtomatik to'ldiriladi
+                </div>
+
+                <!-- Aloqa -->
+                <div class="form-section">Aloqa ma'lumotlari</div>
+
+                <div class="form-group">
+                    <label>Telefon</label>
+                    <input type="tel" id="place-phone" placeholder="+1 234 567 890">
+                </div>
+
+                <div class="form-group">
+                    <label>Telegram</label>
+                    <input type="text" id="place-telegram" placeholder="@username">
+                </div>
+
+                <div class="form-group">
+                    <label>Menu URL</label>
+                    <input type="url" id="place-menu" placeholder="https://t.me/...">
+                </div>
+
+                <!-- Tafsilotlar -->
+                <div class="form-section">Tafsilotlar (faqat 4 qator)</div>
+
+                <div class="form-group">
+                    <label>Bot uchun tafsilotlar</label>
+                    <textarea id="place-details" placeholder="🏬 Ресторан
+🍜 Заказы принимаются с 11:00 до 22:00
+🚚 Доставка есть
+⏰ Время работы: 11:00 - 23:00"></textarea>
+                    <div class="coords-hint">Faqat 4 qator: 🏬 Tip / 🍜 Zakaz / 🚚 Dostavka / ⏰ Vaqt. Telefon, Telegram va Menu yuqorida alohida saqlanadi.</div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Bekor</button>
+                <button class="btn-save" onclick="savePlace()">Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="admin-toast" id="toast"></div>
+
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
