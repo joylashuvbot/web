@@ -883,17 +883,16 @@ function renderMarkers() {
     const valid = places.filter(p => p.lat && p.lng && !isNaN(p.lat) && !isNaN(p.lng));
 
     const pinSvg = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="whiteFilter" x="0" y="0" width="100%" height="100%">
+                    <feColorMatrix type="matrix" values="0 0 0 0 1
+                                                          0 0 0 0 1
+                                                          0 0 0 0 1
+                                                          0 0 0 1 0"/>
+                </filter>
+            </defs>
             <path d="M12 21.5L17.5 16C20.5 13 20.5 8.5 17.5 5.5C14.5 2.5 9.5 2.5 6.5 5.5C3.5 8.5 3.5 13 6.5 16L12 21.5Z" fill="#34C759" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-            <g fill="white">
-                <!-- Fork -->
-                <rect x="9" y="7" width="1.6" height="6.5" rx="0.4"/>
-                <rect x="8.2" y="5.5" width="0.45" height="3.2" rx="0.2"/>
-                <rect x="9.05" y="5.5" width="0.45" height="3.2" rx="0.2"/>
-                <rect x="9.9" y="5.5" width="0.45" height="3.2" rx="0.2"/>
-                <!-- Knife -->
-                <path d="M13.5 5.5h1.2c0.45 0 0.8 0.3 0.8 0.8v3.5c0 0.45-0.35 0.8-0.8 0.8h-1.2V5.5z"/>
-                <rect x="13.5" y="10.5" width="2" height="3.5" rx="0.4"/>
-            </g>
+            <image href="https://i.ibb.co/dwkYXhFR/cutlery.png" x="7.5" y="5.5" width="9" height="9" filter="url(#whiteFilter)" preserveAspectRatio="xMidYMid meet"/>
         </svg>`;
 
     valid.forEach((place) => {
