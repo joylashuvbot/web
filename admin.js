@@ -119,8 +119,16 @@ function renderMarkers() {
     markers = [];
 
     const locationPinSvg = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="whiteFilter" x="0" y="0" width="100%" height="100%">
+                    <feColorMatrix type="matrix" values="0 0 0 0 1
+                                                          0 0 0 0 1
+                                                          0 0 0 0 1
+                                                          0 0 0 1 0"/>
+                </filter>
+            </defs>
             <path d="M12 21.5L17.5 16C20.5 13 20.5 8.5 17.5 5.5C14.5 2.5 9.5 2.5 6.5 5.5C3.5 8.5 3.5 13 6.5 16L12 21.5Z" fill="#34C759" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-            <circle cx="12" cy="10" r="3" fill="white"/>
+            <image href="https://i.ibb.co/dwkYXhFR/cutlery.png" x="7.5" y="5.5" width="9" height="9" filter="url(#whiteFilter)" preserveAspectRatio="xMidYMid meet"/>
         </svg>`;
 
     const validPlaces = filteredPlaces.filter(p => p.lat && p.lng);
