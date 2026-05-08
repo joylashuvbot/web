@@ -1386,6 +1386,7 @@ function showTab(tab, btn) {
     const routePanel = document.getElementById('route-panel');
     const customZoom = document.getElementById('custom-zoom');
     const fabLocation = document.querySelector('.fab-location');
+    const mapPickerAction = document.querySelector('.map-picker-action');
 
     if (tab === 'profile') {
         updateProfileUI();
@@ -1397,6 +1398,7 @@ function showTab(tab, btn) {
         if (routePanel) routePanel.classList.add('hidden');
         if (customZoom) customZoom.classList.add('hidden');
         if (fabLocation) fabLocation.classList.add('hidden');
+        if (mapPickerAction) mapPickerAction.classList.add('hidden');
     } else {
         profilePage.classList.remove('active');
         mapDiv.style.visibility = 'visible';
@@ -1404,6 +1406,7 @@ function showTab(tab, btn) {
         if (searchContainer) searchContainer.style.display = '';
         if (customZoom) customZoom.classList.remove('hidden');
         if (fabLocation) fabLocation.classList.remove('hidden');
+        if (mapPickerAction) mapPickerAction.classList.remove('hidden');
     }
 }
 
