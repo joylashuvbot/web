@@ -758,14 +758,13 @@ function toggleSidebar() {
 }
 
 function goBackToMap() {
-    // Agar shu sahifaga boshqa sahifadan (masalan index.html) o'tilgan bo'lsa,
-    // brauzer tarixi orqali qaytish eng ishonchli usul.
-    if (window.history.length > 1) {
-        window.history.back();
-        return;
+    // Telefon versiyasida sidebar butun ekranni qoplab turadi.
+    // "Orqaga" tugmasi admin panelidan chiqib ketmasligi kerak —
+    // u faqat sidebar'ni yopib, shu admin panelining ichidagi xaritani ko'rsatadi.
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
     }
-    // Aks holda to'g'ridan-to'g'ri xarita sahifasiga o'tamiz.
-    window.location.href = 'index.html';
 }
 
 function showToast(message) {
