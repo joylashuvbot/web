@@ -757,6 +757,17 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
 }
 
+function goBackToMap() {
+    // Agar shu sahifaga boshqa sahifadan (masalan index.html) o'tilgan bo'lsa,
+    // brauzer tarixi orqali qaytish eng ishonchli usul.
+    if (window.history.length > 1) {
+        window.history.back();
+        return;
+    }
+    // Aks holda to'g'ridan-to'g'ri xarita sahifasiga o'tamiz.
+    window.location.href = 'index.html';
+}
+
 function showToast(message) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
