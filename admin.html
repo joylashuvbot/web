@@ -53,6 +53,32 @@
             font-weight: 700;
         }
 
+        .btn-back-map {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 8px;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .btn-back-map:active {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .admin-header-left {
+            display: flex;
+            align-items: center;
+        }
+
         /* Tabs */
         .admin-tabs {
             display: flex;
@@ -704,7 +730,10 @@
         <!-- Sidebar -->
         <div class="admin-sidebar" id="sidebar">
             <div class="admin-header">
-                <h1>🗺 Admin Panel</h1>
+                <div class="admin-header-left">
+                    <button class="btn-back-map" onclick="goBackToMap()" aria-label="Orqaga" title="Xaritaga qaytish">←</button>
+                    <h1>🗺 Admin Panel</h1>
+                </div>
                 <span class="admin-badge">ADMIN</span>
             </div>
 
