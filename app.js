@@ -210,7 +210,7 @@ let routeTo   = { lat: null, lng: null, label: '' };
 let mapSelectMode = null;
 let longPressTimer = null;
 
-const API_URL = "webbot-production-6df6.up.railway.app";
+const API_URL = "https://webbot-production-5ea8.up.railway.app"; // ⚠️ УБЕДИСЬ, ЧТО ЗДЕСЬ ТВОЯ НОВАЯ ССЫЛКА ИЗ RAILWAY!
 const ROUTE_SOURCE_ID = 'route-source';
 const ROUTE_LAYER_ID  = 'route-line';
 
@@ -975,59 +975,42 @@ function updateCardDescription(place) {
 
     let html = '';
 
-    // Name
-    html += `🍽 <strong>${escapeHtml(place.name || getText('place_name'))}</strong>\n`;
+    // 1. Название (жирным)
+    html += `🍽 <strong>${escapeHtml(place.name || 'Ресторан')}</strong>\n`;
 
-    // Address + Google Maps
-    if (place.address || place.city) {
-        const address = place.address || place.city || '';
-        html += `📍 ${escapeHtml(address)}`;
-        if (place.lat && place.lng) {
-            html += ` (<a href="https://www.google.com/maps?q=${place.lat},${place.lng}" target="_blank">Google Maps</a>)`;
+    // 2. Адрес (со ссылкой на Google Maps)
+    if (place.address_name) {
+        let mapsUrl = place.address_link;
+        // Если бот не нашел ссылку, но есть координаты - генерируем сами
+        if (!mapsUrl && place.lat && place.lng) {
+            mapsUrl = `https://www.google.com/maps?q=${place.lat},${place.lng}`;
         }
-        html += `\n`;
+        
+        if (mapsUrl) {
+            html += `📍 <a href="${escapeHtml(mapsUrl)}" target="_blank" style="color:#007AFF;text-decoration:none;">${escapeHtml(place.address_name)} (Google Maps)</a>\n`;
+        } else {
+            html += `📍 ${escapeHtml(place.address_name)}\n`;
+        }
     }
 
-    // MENU - alohida ko'rsatish (agar bo'lsa)
+    // 3. Меню (если есть)
     if (place.menu_url) {
-        html += `📋 <a href="${escapeHtml(place.menu_url)}" target="_blank" style="color:#007AFF;text-decoration:none;font-weight:700;cursor:pointer;">${getText('menu')}</a>\n`;
+        html += `📋 <a href="${escapeHtml(place.menu_url)}" target="_blank" style="color:#007AFF;font-weight:700;text-decoration:none;">Меню</a>\n`;
     }
 
-    // Agar description/text_user bo'lsa — shuni chiqaramiz
-    const desc = (place.description || place.text_user || '').trim();
-    if (desc) {
-        const lines = desc.split('\n').filter(l => l.trim());
-        lines.forEach(line => {
-            const trimmed = line.trim();
-            if (trimmed && !trimmed.startsWith('🍽') && !trimmed.startsWith('📍') && !trimmed.startsWith('📋')) {
-                html += `${escapeHtml(trimmed)}\n`;
-            }
-        });
-    } else {
-        // Description bo'lmasa — alohida maydonlardan chiqaramiz
-        if (place.work_time) {
-            html += `⏰ ${getText('work_time')}: ${escapeHtml(place.work_time)}\n`;
-        }
-        if (place.delivery) {
-            html += `🚘 ${getText('delivery')}: Mavjud\n`;
-        }
-        if (place.phone) {
-            html += `📞 ${getText('phone')}: <a href="tel:${place.phone.replace(/\s/g, '')}">${escapeHtml(place.phone)}</a>\n`;
-        }
-        if (place.telegram) {
-            const tgUsername = place.telegram.replace('@', '');
-            html += `✈️ Telegram: <a href="https://t.me/${tgUsername}" target="_blank">${escapeHtml(place.telegram)}</a>\n`;
-        }
+    // 4. Детали (все остальное: время работы, доставка, телефон, тг)
+    // Делаем ссылки внутри текста кликабельными и сохраняем переносы строк
+    if (place.details) {
+        let detailsHtml = escapeHtml(place.details);
+        
+        // Превращаем любые ссылки в тексте в кликабельные
+        detailsHtml = detailsHtml.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#007AFF;text-decoration:none;">$1</a>');
+        
+        // Добавляем переносы строк (Telegram/HTML)
+        html += detailsHtml.replace(/\n/g, '<br>');
     }
 
     descEl.innerHTML = html.trim();
-}
-
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
 }
 
 function closeCard() {
@@ -1358,20 +1341,6 @@ function stopDrag(e) {
 }
 
 // ============================================
-// GOOGLE MAPS URL PARSER + MAP PICKER
-// ============================================
-
-
-
-
-
-
-
-
-
-
-
-// ============================================
 // TABS
 // ============================================
 function showTab(tab, btn) {
@@ -1492,7 +1461,7 @@ function showPlacesList() {
                 <div style="padding:10px 12px;border-bottom:1px solid #F2F2F7;display:flex;justify-content:space-between;align-items:center;">
                     <div style="flex:1;min-width:0;">
                         <div style="font-weight:800;font-size:13px;color:#000;margin-bottom:2px;">${place.name}</div>
-                        <div style="font-size:11px;color:#8E8E93;font-weight:600;">${place.address || getText('no_address')}</div>
+                        <div style="font-size:11px;color:#8E8E93;font-weight:600;">${place.address_name || getText('no_address')}</div>
                         <div style="font-size:10px;margin-top:3px;">
                             ${hasCoords
                                 ? `<span style="color:#34C759;font-weight:700;">${place.lat?.toFixed(4)}, ${place.lng?.toFixed(4)}</span>`
