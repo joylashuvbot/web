@@ -210,7 +210,7 @@ let routeTo   = { lat: null, lng: null, label: '' };
 let mapSelectMode = null;
 let longPressTimer = null;
 
-const API_URL = "https://webbot-production-5ea8.up.railway.app"; // ⚠️ УБЕДИСЬ, ЧТО ЗДЕСЬ ТВОЯ НОВАЯ ССЫЛКА ИЗ RAILWAY!
+const API_URL = "webbot-production-6df6.up.railway.app"; // ⚠️ УБЕДИСЬ, ЧТО ЗДЕСЬ ТВОЯ НОВАЯ ССЫЛКА ИЗ RAILWAY!
 const ROUTE_SOURCE_ID = 'route-source';
 const ROUTE_LAYER_ID  = 'route-line';
 
