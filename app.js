@@ -89,7 +89,6 @@ let currentLang = 'uz', userData = null, isDemoMode = false, isAdmin = false, ca
 let routeFrom = { lat: null, lng: null, label: '' }, routeTo = { lat: null, lng: null, label: '' };
 let mapSelectMode = null, longPressTimer = null;
 
-// ⚠️ ВАЖНО: УБЕДИСЬ, ЧТО ЗДЕСЬ ТВОЯ НОВАЯ ССЫЛКА ИЗ RAILWAY! ⚠️
 const API_URL = "https://webbot-production-6df6.up.railway.app"; 
 
 const ROUTE_SOURCE_ID = 'route-source', ROUTE_LAYER_ID = 'route-line';
@@ -338,7 +337,6 @@ function swapRoute() {
     if (btn) { btn.style.transform = 'rotate(180deg)'; setTimeout(() => btn.style.transform = '', 300); }
 }
 
-// ✅ ЧИСТЫЕ ФУНКЦИИ ЗАГРУЗКИ БЕЗ ДЕМО-ДАННЫХ ✅
 async function loadPlaces(category = 'all', search = '') {
     try {
         let url = `${API_URL}/api/places?`;
@@ -360,7 +358,6 @@ async function loadAllPlaces() {
         allPlaces = data.success ? data.data : [];
     } catch (e) { allPlaces = []; }
 }
-// ✅ КОНЕЦ ЧИСТЫХ ФУНКЦИЙ ✅
 
 async function loadNearby(lat, lng) {
     try {
@@ -405,6 +402,7 @@ function togglePlaceCard() {
     else { card.classList.add('expanded'); desc.classList.remove('hidden'); if (selectedPlace && !desc.innerHTML.trim()) updateCardDescription(selectedPlace); }
 }
 
+// ИСПРАВЛЕННАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ КАРТОЧКИ
 function updateCardDescription(place) {
     const descEl = document.getElementById('card-description'); if (!descEl) return;
     let html = `🍽 <strong>${escapeHtml(place.name || 'Ресторан')}</strong>\n`;
@@ -413,8 +411,12 @@ function updateCardDescription(place) {
         html += mapsUrl ? `📍 <a href="${escapeHtml(mapsUrl)}" target="_blank" style="color:#007AFF;text-decoration:none;">${escapeHtml(place.address_name)} (Google Maps)</a>\n` : `📍 ${escapeHtml(place.address_name)}\n`;
     }
     if (place.menu_url) html += `📋 <a href="${escapeHtml(place.menu_url)}" target="_blank" style="color:#007AFF;font-weight:700;text-decoration:none;">Меню</a>\n`;
+    
+    // ССЫЛКА НА МЕНЮ ВНУТРИ ТЕКСТА БОЛЬШЕ НЕ ЛОМАЕТСЯ
     if (place.details) {
-        let detailsHtml = escapeHtml(place.details).replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#007AFF;text-decoration:none;">$1</a>');
+        let detailsHtml = place.details; // Не применяем escapeHtml!
+        // Делаем кликабельными только те ссылки, которые не обернуты в тег <a>
+        detailsHtml = detailsHtml.replace(/(?<!href=["'])(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#007AFF;text-decoration:none;">$1</a>');
         html += detailsHtml.replace(/\n/g, '<br>');
     }
     descEl.innerHTML = html.trim();
