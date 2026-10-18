@@ -2,7 +2,7 @@
 // MY FOOD MAP - ADMIN PANEL JS
 // ============================================
 
-const API_URL = "https://webbot-production-5ea8.up.railway.app";
+const API_URL = "webbot-production-6df6.up.railway.app";
 
 let map;
 let markers = [];
