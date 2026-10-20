@@ -404,12 +404,20 @@ function togglePlaceCard() {
 
 // ИСПРАВЛЕННАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ КАРТОЧКИ
 function updateCardDescription(place) {
-    const descEl = document.getElementById('card-description'); if (!descEl) return;
-    let html = `🍽 <strong>${escapeHtml(place.name || 'Ресторан')}</strong>\n`;
-    if (place.address_name) {
-        let mapsUrl = place.address_link || (place.lat && place.lng ? `https://www.google.com/maps?q=${place.lat},${place.lng}` : null);
-        html += mapsUrl ? `📍 <a href="${escapeHtml(mapsUrl)}" target="_blank" style="color:#007AFF;text-decoration:none;">${escapeHtml(place.address_name)} (Google Maps)</a>\n` : `📍 ${escapeHtml(place.address_name)}\n`;
+    const descEl = document.getElementById('card-description');
+    if (!descEl) return;
+
+    // Берем ровно тот текст, который сохранил бот (без добавления своих заголовков)
+    let html = '';
+    if (place.details) {
+        let detailsHtml = place.details; 
+        // Делаем ссылки кликабельными (на случай если они остались текстом)
+        detailsHtml = detailsHtml.replace(/(?<!href=["'])(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#007AFF;text-decoration:none;">$1</a>');
+        // Переносы строк
+        html += detailsHtml.replace(/\n/g, '<br>');
     }
+    descEl.innerHTML = html.trim();
+}
     if (place.menu_url) html += `📋 <a href="${escapeHtml(place.menu_url)}" target="_blank" style="color:#007AFF;font-weight:700;text-decoration:none;">Меню</a>\n`;
     
     // ССЫЛКА НА МЕНЮ ВНУТРИ ТЕКСТА БОЛЬШЕ НЕ ЛОМАЕТСЯ
