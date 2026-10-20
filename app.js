@@ -418,17 +418,6 @@ function updateCardDescription(place) {
     }
     descEl.innerHTML = html.trim();
 }
-    if (place.menu_url) html += `📋 <a href="${escapeHtml(place.menu_url)}" target="_blank" style="color:#007AFF;font-weight:700;text-decoration:none;">Меню</a>\n`;
-    
-    // ССЫЛКА НА МЕНЮ ВНУТРИ ТЕКСТА БОЛЬШЕ НЕ ЛОМАЕТСЯ
-    if (place.details) {
-        let detailsHtml = place.details; // Не применяем escapeHtml!
-        // Делаем кликабельными только те ссылки, которые не обернуты в тег <a>
-        detailsHtml = detailsHtml.replace(/(?<!href=["'])(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#007AFF;text-decoration:none;">$1</a>');
-        html += detailsHtml.replace(/\n/g, '<br>');
-    }
-    descEl.innerHTML = html.trim();
-}
 
 function closeCard() { document.getElementById('place-card').classList.add('hidden'); }
 
