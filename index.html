@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -153,7 +153,7 @@
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="search-input" placeholder="Shahar, davlat yoki joy nomi..." data-i18n-placeholder="search_placeholder" autocomplete="off">
+            <input type="text" id="search-input" placeholder="City or place name..." data-i18n-placeholder="search_placeholder" autocomplete="off">
             <button class="search-clear hidden" id="search-clear">✕</button>
         </div>
         <div id="search-autocomplete" class="search-autocomplete hidden">
@@ -162,7 +162,7 @@
     </div>
 
     <div class="map-picker-action">
-        <button id="map-picker-btn" onclick="startMapPointPicker()" class="map-picker-btn" title="Xaritadan tanlash" aria-label="Xaritadan tanlash">
+        <button id="map-picker-btn" onclick="startMapPointPicker()" class="map-picker-btn" title="Pick on map" aria-label="Pick on map">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 21s-6-5.33-6-10a6 6 0 0 1 12 0c0 4.67-6 10-6 10z"></path>
                 <circle cx="12" cy="11" r="2.5"></circle>
@@ -282,19 +282,19 @@
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
                 </svg>
-                <span data-i18n="directions">Yo'nalish</span>
+                <span data-i18n="directions">Directions</span>
             </button>
             <button onclick="openInMaps()" class="action-btn maps">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <polygon points="1 6 1 22 8 18 16 22 21 18 21 6 16 10 8 6 1 10"></polygon>
                 </svg>
-                <span data-i18n="open_map">Xaritada</span>
+                <span data-i18n="open_map">Open Map</span>
             </button>
             <button onclick="callPlace()" class="action-btn call">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                 </svg>
-                <span data-i18n="call">Qo'ng'iroq</span>
+                <span data-i18n="call">Call</span>
             </button>
         </div>
     </div>
@@ -307,36 +307,36 @@
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            <span data-i18n="add_place">Joy qo'shish</span>
+            <span data-i18n="add_place">Add Place</span>
         </button>
         <button onclick="geocodeAllPlaces()" class="admin-btn orange">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                 <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
             </svg>
-            <span data-i18n="coordinates">Koordinatalar</span>
+            <span data-i18n="coordinates">Coordinates</span>
         </button>
         <button onclick="showPlacesList()" class="admin-btn blue">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                 <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line>
                 <line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line>
             </svg>
-            <span data-i18n="list">Ro'yxat</span>
+            <span data-i18n="list">List</span>
         </button>
     </div>
 
     <!-- Add Place Modal -->
     <div id="add-form" class="modal hidden">
         <div class="modal-content">
-            <h3 data-i18n="add_place">Joy qo'shish</h3>
-            <input type="text" id="new-name" data-i18n-placeholder="name_placeholder" placeholder="Nomi *">
-            <input type="text" id="new-address" data-i18n-placeholder="address_placeholder" placeholder="Manzil">
-            <input type="number" step="any" id="new-lat" data-i18n-placeholder="lat_placeholder" placeholder="Kenglik">
-            <input type="number" step="any" id="new-lng" data-i18n-placeholder="lng_placeholder" placeholder="Uzunlik">
-            <textarea id="new-details" data-i18n-placeholder="details_placeholder" placeholder="Tafsilotlar" rows="4"></textarea>
-            <div class="map-picker-hint" data-i18n="map_pick_hint">Xaritada joy tanlang</div>
+            <h3 data-i18n="add_place">Add Place</h3>
+            <input type="text" id="new-name" data-i18n-placeholder="name_placeholder" placeholder="Name *">
+            <input type="text" id="new-address" data-i18n-placeholder="address_placeholder" placeholder="Address">
+            <input type="number" step="any" id="new-lat" data-i18n-placeholder="lat_placeholder" placeholder="Latitude">
+            <input type="number" step="any" id="new-lng" data-i18n-placeholder="lng_placeholder" placeholder="Longitude">
+            <textarea id="new-details" data-i18n-placeholder="details_placeholder" placeholder="Details" rows="4"></textarea>
+            <div class="map-picker-hint" data-i18n="map_pick_hint">Pick location on map</div>
             <div class="modal-actions">
-                <button onclick="closeAddForm()" class="btn-secondary" data-i18n="cancel">Bekor</button>
-                <button onclick="savePlace()" class="btn-primary" data-i18n="save">Saqlash</button>
+                <button onclick="closeAddForm()" class="btn-secondary" data-i18n="cancel">Cancel</button>
+                <button onclick="savePlace()" class="btn-primary" data-i18n="save">Save</button>
             </div>
         </div>
     </div>
@@ -345,7 +345,7 @@
     <div id="places-list-modal" class="modal hidden">
         <div class="modal-content list-content">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <h3 data-i18n="all_restaurants" style="margin-bottom:0;">Barcha restoranlar</h3>
+                <h3 data-i18n="all_restaurants" style="margin-bottom:0;">All Restaurants</h3>
                 <button onclick="closePlacesList()" class="close-btn">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
@@ -373,28 +373,8 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
                 </svg>
-                <span data-i18n="my_location">Mening joylashuvim</span>
+                <span data-i18n="my_location">My Location</span>
             </button>
-            <div class="profile-card language-selector-card">
-                <span class="profile-card-label" data-i18n="select_language">Tilni tanlang</span>
-                <div class="language-options">
-                    <button class="lang-option" data-lang="uz" onclick="changeLanguage('uz')">
-                        <span class="lang-flag">🇺🇿</span>
-                        <span class="lang-name">O'zbekcha</span>
-                        <span class="lang-check" id="check-uz">✓</span>
-                    </button>
-                    <button class="lang-option" data-lang="ru" onclick="changeLanguage('ru')">
-                        <span class="lang-flag">🇷🇺</span>
-                        <span class="lang-name">Русский</span>
-                        <span class="lang-check" id="check-ru">✓</span>
-                    </button>
-                    <button class="lang-option" data-lang="en" onclick="changeLanguage('en')">
-                        <span class="lang-flag">🇬🇧</span>
-                        <span class="lang-name">English</span>
-                        <span class="lang-check" id="check-en">✓</span>
-                    </button>
-                </div>
-            </div>
             <div class="profile-card">
                 <span class="profile-card-label">Telegram ID</span>
                 <div class="profile-card-value">
@@ -403,10 +383,10 @@
                 </div>
             </div>
             <div class="profile-card">
-                <span class="profile-card-label" data-i18n="current_language">Joriy til</span>
+                <span class="profile-card-label" data-i18n="current_language">Current Language</span>
                 <div class="profile-card-value">
-                    <span class="lang-flag" id="profile-lang-flag">🌐</span>
-                    <span id="profile-lang">UZ</span>
+                    <span class="lang-flag" id="profile-lang-flag">🇬🇧</span>
+                    <span id="profile-lang">EN</span>
                 </div>
             </div>
         </div>
@@ -418,14 +398,14 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <polygon points="1 6 1 22 8 18 16 22 21 18 21 6 16 10 8 6 1 10"></polygon>
             </svg>
-            <span data-i18n="map">Xarita</span>
+            <span data-i18n="map">Map</span>
         </button>
         <button class="nav-btn" onclick="showTab('profile', this)">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            <span data-i18n="profile">Profil</span>
+            <span data-i18n="profile">Profile</span>
         </button>
     </div>
 
