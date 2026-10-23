@@ -402,18 +402,14 @@ function togglePlaceCard() {
     else { card.classList.add('expanded'); desc.classList.remove('hidden'); if (selectedPlace && !desc.innerHTML.trim()) updateCardDescription(selectedPlace); }
 }
 
-// ИСПРАВЛЕННАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ КАРТОЧКИ
+// ИСПРАВЛЕННАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ КАРТОЧКИ (ТЕКСТ 1 В 1)
 function updateCardDescription(place) {
     const descEl = document.getElementById('card-description');
     if (!descEl) return;
-
-    // Берем ровно тот текст, который сохранил бот (без добавления своих заголовков)
     let html = '';
     if (place.details) {
         let detailsHtml = place.details; 
-        // Делаем ссылки кликабельными (на случай если они остались текстом)
         detailsHtml = detailsHtml.replace(/(?<!href=["'])(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#007AFF;text-decoration:none;">$1</a>');
-        // Переносы строк
         html += detailsHtml.replace(/\n/g, '<br>');
     }
     descEl.innerHTML = html.trim();
