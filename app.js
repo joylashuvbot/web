@@ -1,67 +1,16 @@
 // ============================================
-// MY FOOD MAP — APP.JS (Clean Version)
+// MY FOOD MAP — APP.JS (English Version)
 // ============================================
 
 const i18n = {
-    uz: {
-        app_name: "My Food Map", search_placeholder: "Shahar yoki joy nomi...",
-        search_cities: "Shaharlarni qidirish", foods: "Oziq-ovqat", services: "Xizmatlar", all: "Hammasi",
-        map: "Xarita", profile: "Profil", route: "Yo'nalish", directions: "Yo'nalish",
-        open_map: "Xaritada", call: "Qo'ng'iroq", menu: "Menu", delivery: "Yetkazib berish",
-        from_loc: "Qayerdan", to_loc: "Qayerga", build_route: "Yo'l chizish",
-        admin_panel: "Admin", add_place: "Joy qo'shish", cancel: "Bekor", save: "Saqlash",
-        map_pick_hint: "Xaritada joy tanlang", demo_mode: "Demo rejim", no_auth: "Avtorizatsiya yo'q",
-        no_coords_warning: "⚠️ Koordinatasiz joylar bor!", view: "Ko'rish", place_name: "Joy nomi", food: "Oziq-ovqat",
-        address_placeholder: "Manzil", name_placeholder: "Nomi *", phone_placeholder: "Telefon", details_placeholder: "Tafsilotlar",
-        lat_placeholder: "Kenglik", lng_placeholder: "Uzunlik", coordinates: "Koordinatalar", list: "Ro'yxat",
-        all_restaurants: "Barcha restoranlar", select_language: "Tilni tanlang", current_language: "Joriy til",
-        my_location: "Mening joylashuvim", km: "km", min: "daqiqa", geolocation_not_supported: "Geolocation qo'llab-quvvatlanmaydi",
-        location_not_detected: "Joylashuv aniqlanmadi", please_select_locations: "Iltimos, joylarni tanlang",
-        place_added: "Joy qo'shildi!", save_error: "Saqlashda xatolik", server_error: "Server xatosi",
-        demo_mode_message: "⚠️ Demo rejim - ba'zi funksiyalar cheklangan", no_places_found: "Joy topilmadi", no_address: "Manzil yo'q",
-        no_coords: "Koordinatasiz", find: "Topish", update_coords_confirm: "Barcha koordinatasiz joylarni avtomatik topishni xohlaysizmi?",
-        updated: "Yangilandi", failed: "Topilmadi", not_found: "Topilmadi", geocode_error: "Geocode xatosi", you_are_here: "Siz shu yerdasiz",
-        admin_mode_active: "👨‍💼 Admin rejimi faol.", start_point: "Boshlanish nuqtasi", end_point: "Tugash nuqtasi",
-        select_start_point: "Endi boshlanish nuqtasini tanlang", select_end_point: "Endi tugash nuqtasini tanlang",
-        locating: "Joylashuv aniqlanmoqda...", route_not_found: "Yo'l topilmadi", invalid_coords: "Noto'g'ri koordinatalar",
-        route_error: "Yo'l chizishda xatolik", lang_selected_uz: "✅ O'zbek tili tanlandi", lang_selected_ru: "✅ Rus tili tanlandi",
-        lang_selected_en: "✅ English selected", searching: "Qidirilmoqda...", no_results: "Natija topilmadi",
-        city: "Shahar", country: "Davlat", state: "Viloyat", place: "Joy", work_time: "Ish vaqti",
-        maps_url_placeholder: "Google Maps link", extract_coords: "Koordinatalarni topish", pick_on_map: "Xaritadan tanlash",
-        coords_extracted: "Koordinatalar avtomatik to'ldirildi", invalid_maps_url: "Google Maps linkidan koordinata olib bo'lmadi",
-        short_url_hint: "Qisqa link. Brauzerda ochib to'liq linkni yuboring yoki xaritadan tanlang"
-    },
-    ru: {
-        app_name: "My Food Map", search_placeholder: "Город или название места...", search_cities: "Поиск городов",
-        foods: "Еда", services: "Услуги", all: "Все", map: "Карта", profile: "Профиль",
-        route: "Маршрут", directions: "Маршрут", open_map: "На карте", call: "Позвонить", menu: "Меню", delivery: "Доставка",
-        from_loc: "Откуда", to_loc: "Куда", build_route: "Построить маршрут", admin_panel: "Админ", add_place: "Добавить место",
-        cancel: "Отмена", save: "Сохранить", map_pick_hint: "Выберите место на карте", demo_mode: "Демо режим", no_auth: "Нет авторизации",
-        no_coords_warning: "⚠️ Есть места без координат!", view: "Смотреть", place_name: "Название места", food: "Еда",
-        address_placeholder: "Адрес", name_placeholder: "Название *", phone_placeholder: "Телефон", details_placeholder: "Детали",
-        lat_placeholder: "Широта", lng_placeholder: "Долгота", coordinates: "Координаты", list: "Список",
-        all_restaurants: "Все рестораны", select_language: "Выберите язык", current_language: "Текущий язык",
-        my_location: "Мое местоположение", km: "км", min: "мин", geolocation_not_supported: "Геолокация не поддерживается",
-        location_not_detected: "Местоположение не определено", please_select_locations: "Пожалуйста, выберите места",
-        place_added: "Место добавлено!", save_error: "Ошибка сохранения", server_error: "Ошибка сервера",
-        demo_mode_message: "⚠️ Демо режим - некоторые функции ограничены", no_places_found: "Места не найдены", no_address: "Нет адреса",
-        no_coords: "Без координат", find: "Найти", update_coords_confirm: "Хотите автоматически найти координаты для всех мест без координат?",
-        updated: "Обновлено", failed: "Не найдено", not_found: "Не найдено", geocode_error: "Ошибка геокодирования", you_are_here: "Вы здесь",
-        admin_mode_active: "👨‍💼 Режим администратора активен.", start_point: "Начальная точка", end_point: "Конечная точка",
-        select_start_point: "Теперь выберите начальную точку", select_end_point: "Теперь выберите конечную точку",
-        locating: "Определяется местоположение...", route_not_found: "Маршрут не найден", invalid_coords: "Неверные координаты",
-        route_error: "Ошибка построения маршрута", lang_selected_uz: "✅ Выбран узбекский", lang_selected_ru: "✅ Выбран русский",
-        lang_selected_en: "✅ English selected", searching: "Поиск...", no_results: "Ничего не найдено", city: "Город", country: "Страна",
-        state: "Область", place: "Место", work_time: "Время работы", maps_url_placeholder: "Ссылка Google Maps",
-        extract_coords: "Найти координаты", pick_on_map: "Выбрать на карте", coords_extracted: "Координаты автоматически заполнены",
-        invalid_maps_url: "Не удалось извлечь координаты из ссылки", short_url_hint: "Короткая ссылка. Откройте в браузере и отправьте полную ссылку или выберите на карте"
-    },
     en: {
-        app_name: "My Food Map", search_placeholder: "City or place name...", search_cities: "Search cities",
-        foods: "Foods", services: "Services", all: "All", map: "Map", profile: "Profile",
-        route: "Route", directions: "Directions", open_map: "Open Map", call: "Call", menu: "Menu", delivery: "Delivery",
-        from_loc: "From", to_loc: "To", build_route: "Build Route", admin_panel: "Admin", add_place: "Add Place",
-        cancel: "Cancel", save: "Save", map_pick_hint: "Pick location on map", demo_mode: "Demo mode", no_auth: "No authorization",
+        app_name: "My Food Map", search_placeholder: "City or place name...",
+        search_cities: "Search cities", foods: "Foods", services: "Services", all: "All",
+        map: "Map", profile: "Profile", route: "Route", directions: "Directions",
+        open_map: "Open Map", call: "Call", menu: "Menu", delivery: "Delivery",
+        from_loc: "From", to_loc: "To", build_route: "Build Route",
+        admin_panel: "Admin", add_place: "Add Place", cancel: "Cancel", save: "Save",
+        map_pick_hint: "Pick location on map", demo_mode: "Demo mode", no_auth: "No authorization",
         no_coords_warning: "⚠️ Places without coordinates!", view: "View", place_name: "Place Name", food: "Food",
         address_placeholder: "Address", name_placeholder: "Name *", phone_placeholder: "Phone", details_placeholder: "Details",
         lat_placeholder: "Latitude", lng_placeholder: "Longitude", coordinates: "Coordinates", list: "List",
@@ -75,8 +24,7 @@ const i18n = {
         admin_mode_active: "👨‍💼 Admin mode active.", start_point: "Starting point", end_point: "Ending point",
         select_start_point: "Now select the starting point", select_end_point: "Now select the ending point",
         locating: "Locating...", route_not_found: "Route not found", invalid_coords: "Invalid coordinates",
-        route_error: "Route error", lang_selected_uz: "✅ Uzbek selected", lang_selected_ru: "✅ Russian selected",
-        lang_selected_en: "✅ English selected", searching: "Searching...", no_results: "No results found", city: "City",
+        route_error: "Route error", searching: "Searching...", no_results: "No results found", city: "City",
         country: "Country", state: "State", place: "Place", work_time: "Work Time", maps_url_placeholder: "Google Maps link",
         extract_coords: "Extract coordinates", pick_on_map: "Pick on map", coords_extracted: "Coordinates auto-filled",
         invalid_maps_url: "Could not extract coordinates from link", short_url_hint: "Short link. Open in browser and send full link, or pick on map"
@@ -85,12 +33,12 @@ const i18n = {
 
 let map, markers = [], tempMarkers = [], searchMarkers = [], routeMarkers = [];
 let userLocation = null, selectedPlace = null, places = [], allPlaces = [];
-let currentLang = 'uz', userData = null, isDemoMode = false, isAdmin = false, cachedInitData = '';
+let currentLang = 'en'; // ВСЕГДА АНГЛИЙСКИЙ
+let userData = null, isDemoMode = false, isAdmin = false, cachedInitData = '';
 let routeFrom = { lat: null, lng: null, label: '' }, routeTo = { lat: null, lng: null, label: '' };
 let mapSelectMode = null, longPressTimer = null;
 
 const API_URL = "https://webbot-production-6df6.up.railway.app"; 
-
 const ROUTE_SOURCE_ID = 'route-source', ROUTE_LAYER_ID = 'route-line';
 let nominatimAbortController = null;
 
@@ -107,15 +55,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (!cachedInitData) {
         isDemoMode = true; cachedInitData = 'demo_mode_' + Date.now(); sessionStorage.setItem('tg_init_data', cachedInitData);
-        userData = { id: 0, name: 'Demo User', username: 'demo', language: 'uz', is_admin: false };
+        userData = { id: 0, name: 'Demo User', username: 'demo', language: 'en', is_admin: false };
     }
     tg?.expand(); tg?.ready();
     const ver = parseFloat(tg?.version || '6.0');
     if (ver >= 6.1) { tg.setHeaderColor?.('#FFFFFF'); tg.setBackgroundColor?.('#FFFFFF'); }
-    try { await validateUser(cachedInitData); } catch (e) { isDemoMode = true; userData = { id: 0, name: 'Demo', language: 'uz', is_admin: false }; }
+    try { await validateUser(cachedInitData); } catch (e) { isDemoMode = true; userData = { id: 0, name: 'Demo', language: 'en', is_admin: false }; }
     initMap(); await loadPlaces(); await loadAllPlaces();
     setupEventListeners(); setupNominatimSearch();
-    const lang = userData?.language || 'uz'; await setLang(lang); updateLanguageSelectorUI(lang);
+    await setLang('en');
 });
 
 async function validateUser(initData) {
@@ -123,8 +71,8 @@ async function validateUser(initData) {
         const res = await fetch(`${API_URL}/api/validate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ init_data: initData }) });
         const data = await res.json();
         if (data.success) { userData = data.user; isAdmin = data.user.is_admin; }
-        else if (res.status === 403) { isDemoMode = true; userData = { id: 0, name: 'Demo', language: 'uz', is_admin: false }; }
-    } catch (e) { isDemoMode = true; userData = { id: 0, name: 'Demo', language: 'uz', is_admin: false }; }
+        else if (res.status === 403) { isDemoMode = true; userData = { id: 0, name: 'Demo', language: 'en', is_admin: false }; }
+    } catch (e) { isDemoMode = true; userData = { id: 0, name: 'Demo', language: 'en', is_admin: false }; }
 }
 
 function setupNominatimSearch() {
@@ -155,8 +103,7 @@ async function searchNominatim(query) {
     autocompleteList.innerHTML = `<div class="search-loading"><span class="search-loading-spinner"></span><span>${getText('searching')}</span></div>`;
     autocompleteContainer.classList.remove('hidden');
     try {
-        const lang = currentLang === 'uz' ? 'uz' : currentLang === 'ru' ? 'ru' : 'en';
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=8&addressdetails=1&accept-language=${lang}`;
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=8&addressdetails=1&accept-language=en`;
         const res = await fetch(url, { signal: nominatimAbortController.signal, headers: { 'User-Agent': 'MyFoodMap/1.0' } });
         if (!res.ok) throw new Error('Nominatim error');
         const data = await res.json();
@@ -203,39 +150,12 @@ function selectNominatimResult(index) {
 
 function clearSearchMarkers() { searchMarkers.forEach(m => m.remove()); searchMarkers = []; }
 function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
-function getText(key) { return i18n[currentLang]?.[key] || i18n['uz']?.[key] || key; }
+function getText(key) { return i18n['en']?.[key] || key; }
 
 async function setLang(lang) {
-    currentLang = lang;
-    document.querySelectorAll('[data-i18n]').forEach(el => { if (i18n[lang][el.dataset.i18n]) el.textContent = i18n[lang][el.dataset.i18n]; });
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { if (i18n[lang][el.dataset.i18nPlaceholder]) el.placeholder = i18n[lang][el.dataset.i18nPlaceholder]; });
-    document.title = i18n[lang].app_name || 'My Food Map';
-}
-
-async function changeLanguage(lang) {
-    if (lang === currentLang) return;
-    await setLang(lang); updateLanguageSelectorUI(lang);
-    if (!isDemoMode && userData?.id) {
-        try {
-            const body = { language: lang };
-            if (cachedInitData && !cachedInitData.startsWith('demo_mode_')) body.init_data = cachedInitData;
-            await fetch(`${API_URL}/api/user/language`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-        } catch(e) {}
-    }
-    if (userData) userData.language = lang;
-    const msgs = { uz: i18n.uz.lang_selected_uz, ru: i18n.ru.lang_selected_ru, en: i18n.en.lang_selected_en };
-    showToast(msgs[lang] || msgs['uz']);
-}
-
-function updateLanguageSelectorUI(lang) {
-    document.querySelectorAll('.lang-option').forEach(btn => {
-        const bl = btn.dataset.lang, chk = btn.querySelector('.lang-check');
-        if (bl === lang) { btn.classList.add('active'); if (chk) chk.style.display = 'flex'; }
-        else { btn.classList.remove('active'); if (chk) chk.style.display = 'none'; }
-    });
-    const flags = { uz: '🇺🇿', ru: '🇷🇺', en: '🇬🇧' }, names = { uz: 'UZ', ru: 'RU', en: 'EN' };
-    const fe = document.getElementById('profile-lang-flag'), le = document.getElementById('profile-lang');
-    if (fe) fe.textContent = flags[lang] || '🌐'; if (le) le.textContent = names[lang] || lang.toUpperCase();
+    document.querySelectorAll('[data-i18n]').forEach(el => { if (i18n['en'][el.dataset.i18n]) el.textContent = i18n['en'][el.dataset.i18n]; });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { if (i18n['en'][el.dataset.i18nPlaceholder]) el.placeholder = i18n['en'][el.dataset.i18nPlaceholder]; });
+    document.title = i18n['en'].app_name || 'My Food Map';
 }
 
 function initMap() {
@@ -345,10 +265,7 @@ async function loadPlaces(category = 'all', search = '') {
         const data = await res.json();
         places = data.success ? data.data : [];
         renderMarkers();
-    } catch (e) {
-        places = [];
-        renderMarkers();
-    }
+    } catch (e) { places = []; renderMarkers(); }
 }
 
 async function loadAllPlaces() {
@@ -402,7 +319,6 @@ function togglePlaceCard() {
     else { card.classList.add('expanded'); desc.classList.remove('hidden'); if (selectedPlace && !desc.innerHTML.trim()) updateCardDescription(selectedPlace); }
 }
 
-// ИСПРАВЛЕННАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ КАРТОЧКИ (ТЕКСТ 1 В 1)
 function updateCardDescription(place) {
     const descEl = document.getElementById('card-description');
     if (!descEl) return;
@@ -552,10 +468,7 @@ function showTab(tab, btn) {
 
 function updateProfileUI() {
     const name = userData?.name || 'User', uname = userData?.username ? '@' + userData.username : '', uid = userData?.id || '—';
-    const lang = (userData?.language || currentLang || 'uz').toUpperCase();
     document.getElementById('profile-name').textContent = name; document.getElementById('profile-username').textContent = uname; document.getElementById('profile-id').textContent = uid;
-    const flags = { UZ: '🇺🇿', RU: '🇷🇺', EN: '🇬🇧' }, fe = document.getElementById('profile-lang-flag'), le = document.getElementById('profile-lang');
-    if (fe) fe.textContent = flags[lang] || '🌐'; if (le) le.textContent = lang;
     const avatarImg = document.getElementById('profile-avatar'), avatarFb = document.getElementById('profile-avatar-fb'), tg = window.Telegram?.WebApp;
     if (tg?.initDataUnsafe?.user?.photo_url) { avatarImg.src = tg.initDataUnsafe.user.photo_url; avatarImg.classList.remove('hidden'); avatarFb.classList.add('hidden'); }
     else { avatarImg.classList.add('hidden'); avatarFb.classList.remove('hidden'); avatarFb.textContent = name.charAt(0).toUpperCase(); }
